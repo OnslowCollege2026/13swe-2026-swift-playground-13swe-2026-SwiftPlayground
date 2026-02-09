@@ -24,10 +24,14 @@ struct SwiftPlayground {
         var lunchTotal = 0.0
         //let weekDays = ["monday", "tuesday", "wesnday", "thursday", "friday"]
         var counter = 1
+        var high = 0.0
         for day in lunches{
             lunchTotal += day
             print("day \(counter): $\(day)")
             counter += 1
+            if day > high{
+                high = day
+            }
             if day >= 9{
                 print("High spending day detected")
             }
@@ -49,6 +53,8 @@ struct SwiftPlayground {
         else{
             print("Warning: You overspent this week")
         }
+        print("Most expensive lunch: \(high)")
+
 
     }
 }
