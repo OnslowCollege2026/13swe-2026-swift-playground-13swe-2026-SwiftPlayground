@@ -21,15 +21,34 @@ struct SwiftPlayground {
     static func main() {
         let budget = 35.0
         let lunches = [6.50, 8.00, 5.75, 9.20, 7.10]
+        var lunchTotal = 0.0
         //let weekDays = ["monday", "tuesday", "wesnday", "thursday", "friday"]
         var counter = 1
         for day in lunches{
-            print("day \(counter): \(day)$")
+            lunchTotal += day
+            print("day \(counter): $\(day)")
             counter += 1
+            if day >= 9{
+                print("High spending day detected")
+            }
         }
-        print(totalCost)
-        if (budgetCheck) {
+        var snack_total = 0.0
+        let snack_cost = 2.5
+        while (snack_total < 10){
+            snack_total += snack_cost
+            print("Snack total: $\(snack_total)")
+        }
+
+                print("Lunch total: $\(lunchTotal)")
+        print("Snack total: $\(snack_total)")
+        print("Combined total: $\(snack_total+lunchTotal)")
+        print("Average lunch cost: $\(lunchTotal/5)")
+        if (budgetCheck(totalCost: totalCost(lunches:lunches), budget: budget)) {
             print("you stayed in budget")
         }
+        else{
+            print("Warning: You overspent this week")
+        }
+
     }
 }
