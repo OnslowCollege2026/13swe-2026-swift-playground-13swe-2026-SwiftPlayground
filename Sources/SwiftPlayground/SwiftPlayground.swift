@@ -5,6 +5,18 @@
 
 struct SwiftPlayground {
     static func main() {
+func accepts(input: String, isValid: (String) -> Bool) -> Bool {
+    return isValid(input)
+}
+
+let sample = "moonlight"
+func valid (_ text: String)-> Bool{
+    return text.allSatisfy{ String($0) == String($0.lowercased())}
+
+}
+print(accepts(input: sample, isValid: valid))
+
+
 
         let sightings = [
     (name: "moth", score: 3),
@@ -23,11 +35,6 @@ struct SwiftPlayground {
     print (minValue, maxValue, result, M_Ws)
 
 
-    func accepts(_ input: String, isValid: (String) -> Bool) -> Bool {
-    return isValid(input)
-}
-
-let sample = "moonlight"
 
 
         let mixed = ["cat", "7", "owl", "15", "dog", "3"]
