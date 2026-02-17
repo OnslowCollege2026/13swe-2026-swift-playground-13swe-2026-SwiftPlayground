@@ -10,11 +10,7 @@ func accepts(input: String, isValid: (String) -> Bool) -> Bool {
 }
 
 let sample = "moonlight"
-func valid (_ text: String)-> Bool{
-    return text.allSatisfy{ String($0) == String($0.lowercased())}
-
-}
-print(accepts(input: sample, isValid: valid))
+print(accepts(input: sample, isValid: { $0 == $0.lowercased() && $0.count > 8}))
 
 
 
