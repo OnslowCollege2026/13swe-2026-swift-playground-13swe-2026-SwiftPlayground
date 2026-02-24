@@ -9,7 +9,7 @@ func accepts(input: String, isValid: (String) -> Bool) -> Bool {
     return isValid(input)
 }
 
-let sample = "moonlight"
+let sample = "moonlIght"
 print(accepts(input: sample, isValid: { $0 == $0.lowercased() && $0.count > 8}))
 
 
@@ -22,22 +22,20 @@ print(accepts(input: sample, isValid: { $0 == $0.lowercased() && $0.count > 8}))
     (name: "wisp", score: 2)
 ]
     let M_Ws = sightings.filter { seen in return (seen.name).first == "m" || (seen.name).first == "w"}
-    let Jscores = M_Ws.map{M_W in return (M_W.score)}
+    let Jscores = M_Ws.map{($0.score)}
     let result = Jscores.reduce(0) { result, jscore in
     return result + jscore
     }
     let maxValue = Jscores.max { $0 < $1}
     let minValue = Jscores.min { $0 < $1}
-    print (minValue, maxValue, result, M_Ws)
+    print (minValue!, maxValue!, result, M_Ws)
 
 
 
 
         let mixed = ["cat", "7", "owl", "15", "dog", "3"]
         let pure = mixed.compactMap { Int($0) }
-        let impure = mixed.allSatisfy { $0 is String}
         print(pure)
-        print(impure)
 
         let archive = [
     [
@@ -49,5 +47,6 @@ print(accepts(input: sample, isValid: { $0 == $0.lowercased() && $0.count > 8}))
         [["cipher", "bone"], ["ember", "seal"]]
     ]
 ]
-    }
+    //let wing = archive.last {shelf in shelf.contains {$0.hasPrefix("e")}}
+}
 }
