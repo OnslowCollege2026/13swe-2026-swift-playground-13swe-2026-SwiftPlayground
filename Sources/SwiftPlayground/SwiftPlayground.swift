@@ -7,7 +7,7 @@ struct Student: Identifiable{
     var age: Int
 }
 struct Course: CustomStringConvertible{
-    let id: UUID = UUID()
+    let id: String
     var title: String
     var courseDescription: String
     var description: String {
@@ -15,18 +15,32 @@ struct Course: CustomStringConvertible{
 
 }
 }
-struct Enrolment: Codable{
+struct Enrolment: Hashable{
     let studentId: UUID
-    let courseId: UUID
+    let courseId: String
 
+}
+struct ScoreEntry: Comparable{
+    let studentId: UUID
+    var points: Int
+    static func < (lhs: ScoreEntry, rhs:
+    ScoreEntry) -> Bool { lhs.points < rhs.points
+    }
 }
 @main
 
 struct SwiftPlayground {
     static func main() {
-let leb = Student(name: "Leb", age: 14)
-let corse1 = Course(title: "how to use after effects, for dumbies", courseDescription: "are you a little node based idot, well then hi leb")
-let studentOne = Enrolment(studentId: leb.id, courseId: corse1.id)
-//let data = try JSONEncoder().encode(lesson)
+let leb = Student(name: "Leb", age: 16)
+let millie = Student(name: "Millie", age: 17)
+let vfx = Course(id: "lm" ,title: "how to use after effects, for dumbies", courseDescription: "are you a little node based idot, well then hi leb")
+let scoreEntrys = [ScoreEntry(studentId: leb.id, points: 0), ScoreEntry(studentId: millie.id, points: 200)]
+
+let studentOne = Enrolment(studentId: leb.id, courseId: vfx.id)
+
+///let data = try! JSONEncoder().encode(studentOne)
+///let decoded = try! JSONDecoder().decode(Enrolment.self, from: data)
+///print(decoded)
+print(scoreEntrys.sorted(by: >))
 }
 }
