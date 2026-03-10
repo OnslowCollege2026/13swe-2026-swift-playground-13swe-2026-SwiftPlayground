@@ -1,6 +1,16 @@
 // The Swift Programming Language
 // https://docs.swift.org/swift-book
 import Foundation
+struct Room: Hashable {
+    let building: String
+    let number: Int
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(building.lowercased())
+        hasher.combine(number)
+    }
+}
+
 struct Student: Identifiable{
     let id: UUID = UUID()
     var name: String
