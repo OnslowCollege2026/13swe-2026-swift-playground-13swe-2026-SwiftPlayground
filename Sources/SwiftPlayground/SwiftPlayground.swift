@@ -58,6 +58,7 @@ struct SwiftPlayground {
 
         /// Create a func that will act as the code for adding books to the library
         func addBooks() {
+            /// Set our values to nothing
             var name = ""
             var author = ""
             var valid = false
@@ -90,17 +91,21 @@ struct SwiftPlayground {
                     }
                 }
             }
+            /// Adds the new book to the available library
             print("Added \(name) by \(author) to the available library.")
             let addedBook = Book(id: nextBookId, name: name, author: author, availability: true)
             books.append(addedBook)
 
+            /// Increase the next book id for the next added book
             nextBookId += 1
         }
 
+        /// Because our user storage already contains 3 users, the next ID given will be '4'
         var nextUserId: Int = 4
 
         /// Create a func that will act as the code for registering users to the libaray
         func registerUser() {
+            /// Set our values to nothing
             var firstName = ""
             var lastName = ""
             var valid: Bool = false
@@ -132,6 +137,7 @@ struct SwiftPlayground {
                     }
                 }
             }
+            /// Adds the new user to the system
             print("Added \(firstName) \(lastName) to the user registration list.")
             let addedUser = User(id: nextUserId, fName: firstName, lName: lastName)
             users.append(addedUser)
@@ -139,13 +145,16 @@ struct SwiftPlayground {
         }
         /// Create a func for issuing books from the available library
         func issueBook() {
+            /// Set our values to nothing
             var bookID = 0
             var userID = 0
             var valid = false
 
+            /// While loop for the book ID
             while valid == false {
                 print("Enter the ID of the book you would like to issue:")
 
+                /// If the user input isn't a number or is a number that equals 0 (or below 0), ask again
                 if let input = readLine(), let id = Int(input) {
                     if id != 0 {
                         bookID = id
@@ -158,10 +167,12 @@ struct SwiftPlayground {
                 }
             }
 
+            /// Create the index number for the book search (and make it 0)
             var bookIndex = 0
             /// Make a bool variable to see if the inputted ID is actually present
             var bookFound = false
 
+            /// Loop over every book until the corresponding value is found, or until all books have been looped through
             for book in books {
                 if book.id == bookID {
                     bookFound = true
@@ -171,6 +182,7 @@ struct SwiftPlayground {
                     }
                 }
             }
+            /// If the book isn't found, exit the loop as tell the user that it wasn't found
             if bookFound == false {
                 print("Book ID not found.")
                 return
@@ -294,72 +306,113 @@ struct SwiftPlayground {
             }
         }
 
-        func searchItem() {
-            print("\nWhat would you like to search for: ")
-            print(
-                """
-                A. Book name
-                B. User name
-                """)
-            if var menuInput = readLine() {
-                menuInput = menuInput.uppercased()
-                if menuInput == "A" {
-                    print("Enter the name of the book you are searching for:")
+        func searchBooks() {
+            var menuValid = false
+            while menuValid == false {
+                print("What would you like to search for: ")
+                print(
+                    """
+                    A. Book name
+                    B. Author name
+                    """)
 
-                    var valid = false
-                    while valid == false {
-                        if let input = readLine() {
-                            if input != "" {
+                if var menuInput = readLine() {
+                    menuInput = menuInput.uppercased().filter { !$0.isWhitespace }
 
-                                valid = true
-                                var found = false
+                    if menuInput == "A" {
+                        print("Enter the name of the book you are searching for:")
 
-                                for book in books {
-                                    if book.name.lowercased().contains(input.lowercased()) {
-                                        print(book)
-                                        found = true
+                        menuValid = true
+                        var valid = false
+                        while valid == false {
+                            if let input = readLine() {
+                                if input != "" {
+
+                                    valid = true
+                                    var found = false
+
+                                    for book in books {
+                                        if book.name.lowercased().contains(input.lowercased()) {
+                                            print(book)
+                                            found = true
+                                        }
                                     }
-                                }
-                                if found == false {
-                                    print("Book not found.")
+                                    if found == false {
+                                        print("Book not found.")
+                                    }
+                                } else {
+                                    print("Please enter a valid book name.")
+                                    print("Enter the name of the book you are searching for:")
                                 }
                             } else {
                                 print("Please enter a valid book name.")
+                                print("Enter the name of the book you are searching for:")
                             }
-                        } else {
-                            print("Please enter a valid book name.")
                         }
-                    }
-                } else if menuInput == "B" {
-                    print("Enter the name of the author you are searching for:")
+                    } else if menuInput == "B" {
+                        print("Enter the name of the author you are searching for:")
 
-                    var valid = false
-                    while valid == false {
-                        if let input = readLine() {
-                            if input != "" {
+                        menuValid = true
+                        var valid = false
+                        while valid == false {
+                            if let input = readLine() {
+                                if input != "" {
 
-                                valid = true
-                                var found = false
+                                    valid = true
+                                    var found = false
 
-                                for book in books {
-                                    if book.author.lowercased().contains(input.lowercased()) {
-                                        print(book)
-                                        found = true
+                                    for book in books {
+                                        if book.author.lowercased().contains(input.lowercased()) {
+                                            print(book)
+                                            found = true
+                                        }
                                     }
-                                }
-                                if found == false {
-                                    print("Author not found.")
+                                    if found == false {
+                                        print("Author not found.")
+                                    }
+                                } else {
+                                    print("Please enter a valid book name.")
+                                    print("Enter the name of the author you are searching for:")
                                 }
                             } else {
                                 print("Please enter a valid book name.")
+                                print("Enter the name of the author you are searching for:")
                             }
-                        } else {
-                            print("Please enter a valid book name.")
                         }
+                    } else {
+                        print("Please enter A or B.")
                     }
                 }
             }
 
+        }
+
+        func searchUser() {
+            var valid = false
+            while valid == false {
+            print("Enter the first name of the user you are searching for:")
+                if let input = readLine() {
+                    if input != "" {
+
+                        valid = true
+                        var found = false
+
+                        for user in users {
+                            if user.fName.lowercased().contains(input.lowercased()) {
+                                print(user)
+                                found = true
+                            }
+                        }
+                        if found == false {
+                            print("User not found.")
+                        }
+                    } else {
+                        print("Please enter a valid first name.")
+                    }
+                } else {
+                    print("Please enter a valid first name.")
+                }
+            }
         }
         /// Create a menu for the user
 
@@ -372,8 +425,9 @@ struct SwiftPlayground {
                 C. Issue book
                 D. Return book
                 E. View available books
-                F. Search items
-                G. Edit records
+                F. Search books (title/author)
+                G. Search users
+                H. Edit records
                 Q. Quit
                 """)
             if var userInput = readLine() {
@@ -389,7 +443,9 @@ struct SwiftPlayground {
                 } else if userInput == "E" {
                     viewAvailableBooks()
                 } else if userInput == "F" {
-                    searchItem()
+                    searchBooks()
+                } else if userInput == "G" {
+                    searchUser()
                 } else if userInput == "Q" {
                     valid = false
                 } else {
