@@ -3,22 +3,33 @@ import Foundation
 /// School Library Book Borrowing System
 
 /// Create a struct that represents the framework for the books in our library
-struct Book: Identifiable {
+struct Book: Identifiable, CustomStringConvertible {
     let id: Int
     let name: String
     let author: String
     var availability: Bool
+
+    /// Using CustomStringConvertible, we give a description to make it easier to print out books and their status
+    var description: String {
+        /// If the books available, print it with 'available' at the end, otherwise print it as 'unavailable'
+        if availability == true {
+            return "id: \(id), '\(name)' by \(author) (available)"
+        } else {
+            return "id: \(id), '\(name)' by \(author) (unavailable)"
+        }
+    }
 }
-/// Create a struct that represents the borrowers
+/// Create a struct that represents the users
 struct User: Identifiable {
     let id: Int
     let fName: String
     let lName: String
 }
-/// Create a struct that represents the loan itself
+/// Create a struct that represents the loans
 struct Loan {
     let bookID: Int
     let userID: Int
+    var returned: Bool
 }
 
 @main
@@ -53,7 +64,7 @@ struct SwiftPlayground {
 
             /// While loop for the BOOK'S name from the user
             while valid == false {
-                print("What is the name of the book you would like to add?")
+                print("Enter the name of the book you would like to add:")
                 /// Until the user gives us a valid input, keep asking
                 if let bookName = readLine() {
                     if bookName != "" {
@@ -68,14 +79,14 @@ struct SwiftPlayground {
 
             /// While loop for the AUTHOR'S name from the user
             while valid == false {
-                print("What is the name of the author of the book?")
+                print("Enter the name of the author of the book:")
                 /// Until the user gives us a valid input, keep asking
                 if let authorName = readLine() {
                     if authorName != "" {
                         author = authorName
                         valid = true
                     } else {
-                        print("Please enter a valid author name")
+                        print("Please enter a valid author name.")
                     }
                 }
             }
@@ -95,7 +106,7 @@ struct SwiftPlayground {
             var valid: Bool = false
             /// While loop for the user's FIRST name
             while valid == false {
-                print("What is your first name?")
+                print("Enter your first name:")
                 /// Until the user gives us a valid input, keep asking
                 if let userFirstName = readLine() {
                     if userFirstName != "" {
@@ -110,7 +121,7 @@ struct SwiftPlayground {
 
             /// While loop for the user's LAST name
             while valid == false {
-                print("What is your last name?")
+                print("Enter your last name:")
                 /// Until the user gives us a valid input, keep asking
                 if let userLastName = readLine() {
                     if userLastName != "" {
@@ -133,13 +144,17 @@ struct SwiftPlayground {
             var valid = false
 
             while valid == false {
-                print("Enter the ID of the book you would like to issue.")
+                print("Enter the ID of the book you would like to issue:")
 
                 if let input = readLine(), let id = Int(input) {
-                    bookID = id
-                    valid = true
+                    if id != 0 {
+                        bookID = id
+                        valid = true
+                    } else {
+                        print("Please enter a valid ID (number)")
+                    }
                 } else {
-                    print("Please enter a valid number")
+                    print("Please enter a valid ID (number)")
                 }
             }
 
@@ -150,9 +165,10 @@ struct SwiftPlayground {
             for book in books {
                 if book.id == bookID {
                     bookFound = true
-                    break
                 } else {
-                    bookIndex += 1
+                    if bookFound == false {
+                        bookIndex += 1
+                    }
                 }
             }
             if bookFound == false {
@@ -167,11 +183,15 @@ struct SwiftPlayground {
             valid = false
 
             while valid == false {
-                print("Please enter your user ID:")
+                print("Enter your user ID:")
 
                 if let input = readLine(), let id = Int(input) {
-                    userID = id
-                    valid = true
+                    if id != 0 {
+                        userID = id
+                        valid = true
+                    } else {
+                        print("Please enter a valid number.")
+                    }
                 } else {
                     print("Please enter a valid number.")
                 }
@@ -191,12 +211,156 @@ struct SwiftPlayground {
 
             books[bookIndex].availability = false
 
-            let newLoan = Loan(bookID: bookID, userID: userID)
+            let newLoan = Loan(bookID: bookID, userID: userID, returned: false)
             loans.append(newLoan)
 
             print("Book has been issued successfully.")
         }
 
+        func returnBook() {
+            var bookID: Int = 0
+            var bookFound: Bool = false
+            var bookIndex: Int = 0
+
+            while bookFound == false {
+
+                print("Enter the ID of the book you would like to return:")
+                if let input = readLine(), let id = Int(input) {
+                    if id != 0 {
+                        bookID = id
+                        bookFound = false
+                        bookIndex = 0
+
+                        for book in books {
+                            if book.id == bookID {
+                                bookFound = true
+                            } else {
+                                if bookFound == false {
+                                    bookIndex += 1
+                                }
+                            }
+                        }
+                        if bookFound == false {
+                            print("Book ID not found.")
+                        }
+
+                    } else {
+                        print("Please enter a valid ID (number)")
+                    }
+                } else {
+                    print("Please enter a valid ID (number)")
+
+                }
+            }
+            if books[bookIndex].availability == true {
+                print("This book is already in the library.")
+            } else {
+
+                var loanIndex: Int = 0
+                var loanFound: Bool = false
+
+                for loan in loans {
+                    if loan.bookID == bookID {
+                        loanFound = true
+                        break
+                    } else {
+                        loanIndex += 1
+                    }
+                }
+                if loanFound == true {
+                    loans[loanIndex].returned = true
+                }
+                /// Change the status of the book's availability
+                books[bookIndex].availability = true
+                print("Book successfully returned.")
+            }
+        }
+
+        /// Create a func for viewing all available and unavailable books
+        func viewAvailableBooks() {
+            print("Available books:")
+            for book in books {
+                if book.availability == true {
+                    print(book)
+                }
+
+            }
+            print("\nUnavailable books:")
+            for book in books {
+                if book.availability == false {
+                    print(book)
+                }
+
+            }
+        }
+
+        func searchItem() {
+            print("\nWhat would you like to search for: ")
+            print(
+                """
+                A. Book name
+                B. User name
+                """)
+            if var menuInput = readLine() {
+                menuInput = menuInput.uppercased()
+                if menuInput == "A" {
+                    print("Enter the name of the book you are searching for:")
+
+                    var valid = false
+                    while valid == false {
+                        if let input = readLine() {
+                            if input != "" {
+
+                                valid = true
+                                var found = false
+
+                                for book in books {
+                                    if book.name.lowercased().contains(input.lowercased()) {
+                                        print(book)
+                                        found = true
+                                    }
+                                }
+                                if found == false {
+                                    print("Book not found.")
+                                }
+                            } else {
+                                print("Please enter a valid book name.")
+                            }
+                        } else {
+                            print("Please enter a valid book name.")
+                        }
+                    }
+                } else if menuInput == "B" {
+                    print("Enter the name of the author you are searching for:")
+
+                    var valid = false
+                    while valid == false {
+                        if let input = readLine() {
+                            if input != "" {
+
+                                valid = true
+                                var found = false
+
+                                for book in books {
+                                    if book.author.lowercased().contains(input.lowercased()) {
+                                        print(book)
+                                        found = true
+                                    }
+                                }
+                                if found == false {
+                                    print("Author not found.")
+                                }
+                            } else {
+                                print("Please enter a valid book name.")
+                            }
+                        } else {
+                            print("Please enter a valid book name.")
+                        }
+                    }
+                }
+            }
+
+        }
         /// Create a menu for the user
 
         var valid = true
@@ -220,6 +384,12 @@ struct SwiftPlayground {
                     registerUser()
                 } else if userInput == "C" {
                     issueBook()
+                } else if userInput == "D" {
+                    returnBook()
+                } else if userInput == "E" {
+                    viewAvailableBooks()
+                } else if userInput == "F" {
+                    searchItem()
                 } else if userInput == "Q" {
                     valid = false
                 } else {
